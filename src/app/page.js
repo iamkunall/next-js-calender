@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { addWeeks, subWeeks } from 'date-fns';
 import moment from 'moment-timezone';
+import axios from 'axios';
 
 import Header from '@/components/Header';
 import SelectTimeZone from '@/components/SelectTimeZone';
@@ -18,6 +19,7 @@ const timezones = [
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTimezone, setSelectedTimezone] = useState(timezones[0]);
+  const [storedDates, setStoredDates] = useState([]);
 
   const handlePreviousWeek = () => {
     setSelectedDate((prevDate) => subWeeks(new Date(prevDate), 1));
@@ -39,7 +41,22 @@ export default function Home() {
     return moment(time).tz(selectedTimezone).format('hh:mm A');
   };
 
+  const handleFetchData = async () => {
+    await axios
+      .get('/data.json')
+      .then((res) => {
+        if (res && res.data) {
+          setStoredDates(res.data);
+        }
+      })
+      .catch((err) => {
+        window.alert('Something went Wrong Please try again');
+        console.log('Error in fetching data from API', err);
+      });
+  };
+
   useEffect(() => {
+    handleFetchData();
     moment.tz.setDefault('UTC');
   }, []);
 
@@ -58,6 +75,7 @@ export default function Home() {
       />
       <div>
         <WorkingDaysList
+          storedDates={storedDates}
           selectedTimeZone={selectedTimezone}
           selectedDate={selectedDate}
           getTimeInSelectedTimezone={getTimeInSelectedTimezone}

@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import moment from 'moment-timezone';
 
-import jsonData from '../../data.json';
-
 import WorkingHoursList from './WorkingHoursList';
 
 import { startOfWeek, addDays, differenceInDays } from 'date-fns';
 
-const WorkingDaysList = ({ selectedDate, getTimeInSelectedTimezone }) => {
+const WorkingDaysList = ({
+  selectedDate,
+  getTimeInSelectedTimezone,
+  storedDates,
+}) => {
   //Store total working days
   const [workingDays, setWorkingDays] = useState([]);
-  //Store dates which is already in local storage
-  const [storedDates, setStoredDates] = useState([]);
 
   //Calculate total working days
   const calculateWorkingDays = useCallback(() => {
@@ -39,10 +39,6 @@ const WorkingDaysList = ({ selectedDate, getTimeInSelectedTimezone }) => {
     if (selectedDate) {
       calculateWorkingDays();
     }
-  }, [selectedDate]);
-
-  useEffect(() => {
-    setStoredDates(jsonData);
   }, [selectedDate]);
 
   return (

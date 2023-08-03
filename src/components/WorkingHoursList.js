@@ -46,13 +46,6 @@ const WorkingHoursList = ({ data, getTimeInSelectedTimezone, storedDates }) => {
     const timeInput = `${moment(date).format('YYYY-MM-DD')}T${time}:00`;
 
     storedDates.map((val) => {
-      console.log(
-        moment(date).format('DD-MM-YYYY'),
-        moment(new Date(val.date)).format('DD-MM-YYYY'),
-        moment(date).format('DD-MM-YYYY') ===
-          moment(new Date(val.date)).format('DD-MM-YYYY'),
-      );
-
       if (
         moment(new Date(val.date)).format('DD-MM-YYYY') ===
           moment(date).format('DD-MM-YYYY') &&
@@ -70,13 +63,12 @@ const WorkingHoursList = ({ data, getTimeInSelectedTimezone, storedDates }) => {
         let isChecked = handleChecked(data.rawDate, time);
         return (
           <div key={time} className="m-2">
-            <CheckBox initialValue={isChecked} data={data} />
-            <span className="ml-1 text-sm">
-              {' '}
-              {getTimeInSelectedTimezone(
-                `${moment(data.date).format('YYYY-MM-DD')}T${time}:00`,
-              )}
-            </span>
+            <CheckBox
+              initialValue={isChecked}
+              data={data}
+              time={time}
+              getTimeInSelectedTimezone={getTimeInSelectedTimezone}
+            />
           </div>
         );
       })}
